@@ -9,7 +9,6 @@ def get_db():
 @route('/graph/<article>')
 def get_graph(article):
     db = get_db()
-#    query = 'MATCH (p:Page {title:{0}})<-[:Link]-(o:Page) RETURN o.title as link_title LIMIT {1}'.format(article, 100)
     query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page) RETURN o.title as link' % article.replace("_"," ")
     results = db.run(query)
     nodes = []
