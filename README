@@ -1,0 +1,18 @@
+usage: HTTP GET http://localhost:8080/hack17/SOME_ARTICLE_NAME
+
+response: {
+"data": [
+{
+"url": "https://en.wikipedia.org/wiki/Perl",
+"id": 1,
+"title": "Perl"
+},
+{
+"url": "https://en.wikipedia.org/wiki/Python",
+"id": 2,
+"name": "Python"
+}
+]
+}
+
+
