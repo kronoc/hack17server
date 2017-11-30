@@ -1,3 +1,9 @@
+You need the neo4j python driver in order for this code to be useful, and for neo4j to be running in an obvious place.
+
+_pip install neo4j-driver_
+
+My machine makes me do "pip2 install neo4j-driver". IMMV.
+
 usage: HTTP GET http://localhost:8080/graph/SOME_ARTICLE_NAME
 
 response: {
