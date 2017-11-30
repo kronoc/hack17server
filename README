@@ -1,4 +1,4 @@
-usage: HTTP GET http://localhost:8080/hack17/SOME_ARTICLE_NAME
+usage: HTTP GET http://localhost:8080/graph/SOME_ARTICLE_NAME
 
 response: {
 "data": [
