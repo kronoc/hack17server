@@ -1,19 +1,25 @@
 from bottle import route, run, template
+from neo4j.v1 import GraphDatabase, basic_auth
 
-@route('/hack17/<article_name>')
-def returnLinks(article_name):
-    articles = fetchLinks(article_name)
-    return dict(data=articles)
+driver = GraphDatabase.driver('bolt://localhost',auth=basic_auth("neo4j", "password"))
 
-def fetchLinks(article_name):
-    titles = queryGraph(article_name)
-    title = titles[0]
-    return [{ "id": 1, "title": titles[0], "url": generateUrl(titles[0]) }, { "id": 2, "name": titles[1], "url": generateUrl(titles[1]) }]
+def get_db():
+    return driver.session()
 
-def queryGraph(article_name):
-    root_title = article_name.replace("_"," ")    
-    titles = ["Perl","Python","Java","C++","Whitespace","OS/2 Warp"]
-    return titles
+@route('/graph/<article>')
+def get_graph(article):
+    db = get_db()
+#    query = 'MATCH (p:Page {title:{0}})<-[:Link]-(o:Page) RETURN o.title as link_title LIMIT {1}'.format(article, 100)
+    query = 'MATCH (p:Page {title:"Ireland"})<-[:Link]-(o:Page) RETURN o.title as link'
+    results = db.run(query)
+    nodes = []
+    rels = []
+    i = 0
+    for record in results:
+        nodes.append({"title": record["link"], "url": generateUrl(record["link"])})
+        target = i
+        i += 1
+    return dict(pages=nodes)
 
 def generateUrl(title):
     url_root = "https://en.wikipedia.org/wiki/"
