@@ -9,39 +9,34 @@ def get_db():
 
 @route('/graph/<article>')
 def get_graph(article):
-    db = get_db()
-    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count ORDER BY rel_count DESC LIMIT 10' % article.replace("_"," ")
-    results = db.run(query)
-    nodes = []
-    rels = []
-    i = 0
-    for record in results:
-        nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": is_backlinking(article, record["link_title"])})
-        target = i
-        i += 1
-    response.set_header('Access-Control-Allow-Origin', '*')
-    return dict(pages=nodes)
+	query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count ORDER BY rel_count DESC LIMIT 10' % article.replace("_"," ")
+	return query_db(query,article)
 
 @route('/multigraph/<articles>')
 def get_multigraph(articles):
-    db = get_db()
-    article_list = articles.split(",")
-    article_str = "','".join(article_list)
-    article_str = "'" + article_str + "'"
-    query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) ' \
+	article_list = articles.split(",")
+    	article_str = "','".join(article_list)
+    	article_str = "'" + article_str + "'"
+	query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) ' \
             'WHERE p.title in pages AND size(o.title) > 4 AND NOT (o.title IN pages) ' \
             'WITH o,count(q) as rel_count RETURN  o.title as link_title, rel_count ORDER BY rel_count DESC LIMIT 10' % article_str.replace("_"," ")
+	return query_db(query,article_str)
 
+def query_db(query,params):
+    db = get_db()
+    results = db.run(query)
+    nodes = []
     results = db.run(query)
     nodes = []
     rels = []
     i = 0
     for record in results:
-        nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": is_backlinking(articles, record["link_title"])})
+        nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": is_backlinking(params, record["link_title"])})
         target = i
         i += 1
     response.set_header('Access-Control-Allow-Origin', '*')
     return dict(pages=nodes)
+
 
 def is_backlinking(parent, child):
 	return "true"
