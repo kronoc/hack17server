@@ -10,14 +10,29 @@ def get_db():
 @route('/graph/<article>')
 def get_graph(article):
     db = get_db()
-    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count Limit 100' % article.replace("_"," ")
-#    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page) RETURN o.title as link' % article.replace("_"," ")
+    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count LIMIT 100' % article.replace("_"," ")
     results = db.run(query)
     nodes = []
     rels = []
     i = 0
     for record in results:
         nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": is_backlinking(article, record["link_title"])})
+        target = i
+        i += 1
+    response.set_header('Access-Control-Allow-Origin', '*')
+    return dict(pages=nodes)
+
+@route('/multigraph/<articles>')
+def get_multigraph(articles):
+    db = get_db()
+    article_list = articles.split(",")
+    query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) WHERE p.title in pages With o,count(q) as rel_count  RETURN  o.title as link_title, rel_count LIMIT 100'% articles.replace("_"," ")
+    results = db.run(query)
+    nodes = []
+    rels = []
+    i = 0
+    for record in results:
+        nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": is_backlinking(articles, record["link_title"])})
         target = i
         i += 1
     response.set_header('Access-Control-Allow-Origin', '*')
@@ -31,7 +46,6 @@ def is_backlinking(parent, child):
 	#	return "true"
 	#else:
 	#	return "false"
-
 
 def generateUrl(title):
     url_root = "https://en.wikipedia.org/wiki/"
