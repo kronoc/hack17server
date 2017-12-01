@@ -1,3 +1,6 @@
+API to give you a list of wikipedia article suggestions based on articles you have also read. See https://github.com/ilvar/hack17extension for the browser extension which uses this.
+
+
 You need the neo4j python driver in order for this code to be useful, and for neo4j to be running in an obvious place.
 
 You also need a graphdb installed in a neo4j database, like the one included in the project.
