@@ -10,14 +10,15 @@ def get_db():
 @route('/graph/<article>')
 def get_graph(article):
     db = get_db()
-    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page) RETURN o.title as link' % article.replace("_"," ")
+    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count' % article.replace("_"," ")
+#    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page) RETURN o.title as link' % article.replace("_"," ")
     results = db.run(query)
     nodes = []
     rels = []
     i = 0
     for record in results:
-#        nodes.append({"title": record["link"], "url": generateUrl(record["link"]), "rel_count": get_links_count(record["link"])})
-        nodes.append({"title": record["link"], "url": generateUrl(record["link"]), "rel_count": randint(1, 100), "rev_link": "true"})
+        nodes.append({"title": record["link_title"], "url": generateUrl(record["link_title"]), "rel_count": record["rel_count"],"rev_link": "true"})
+#        nodes.append({"title": record["link"], "url": generateUrl(record["link"]), "rel_count": randint(1, 100), "rev_link": "true"})
         target = i
         i += 1
     return dict(pages=nodes)
