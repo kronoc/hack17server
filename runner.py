@@ -31,6 +31,7 @@ def get_multigraph(articles):
     query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) ' \
             'WHERE p.title in pages AND size(o.title) > 4 AND NOT (o.title IN pages) ' \
             'WITH o,count(q) as rel_count RETURN  o.title as link_title, rel_count ORDER BY rel_count DESC LIMIT 10' % article_str.replace("_"," ")
+
     results = db.run(query)
     nodes = []
     rels = []
