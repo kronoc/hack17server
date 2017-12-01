@@ -26,7 +26,9 @@ def get_graph(article):
 def get_multigraph(articles):
     db = get_db()
     article_list = articles.split(",")
-    query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) WHERE p.title in pages With o,count(q) as rel_count  RETURN  o.title as link_title, rel_count LIMIT 100'% articles.replace("_"," ")
+    article_str = "','".join(article_list)
+    article_str = "'" + article_str + "'"
+    query = 'WITH [%s] as pages MATCH ((p:Page)<-[:Link]-(o:Page)), (o) <-[:Link]-(q:Page) WHERE p.title in pages With o,count(q) as rel_count  RETURN  o.title as link_title, rel_count LIMIT 100'% article_str.replace("_"," ")
     results = db.run(query)
     nodes = []
     rels = []
