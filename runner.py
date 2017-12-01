@@ -36,6 +36,7 @@ def query_db(query,params):
 
 def is_backlinking(parent, child):
 	return "true"
+	#the following code currently always returns true
 	#db = get_db()
 	#query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page) Where o.title = "%s" RETURN true LIMIT 1' % (child.replace("_"," "), parent.replace("_"," "))
 	#if db.run(query):
