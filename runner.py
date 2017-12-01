@@ -26,8 +26,6 @@ def query_db(query,params):
     db = get_db()
     results = db.run(query)
     nodes = []
-    results = db.run(query)
-    nodes = []
     rels = []
     i = 0
     for record in results:
