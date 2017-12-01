@@ -10,7 +10,7 @@ def get_db():
 @route('/graph/<article>')
 def get_graph(article):
     db = get_db()
-    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count LIMIT 100' % article.replace("_"," ")
+    query = 'MATCH (p:Page {title:"%s"})<-[:Link]-(o:Page),(o) <-[:Link]-(q:Page) With o,count(q) as rel_count RETURN o.title as link_title, rel_count ORDER BY rel_count DESC LIMIT 10' % article.replace("_"," ")
     results = db.run(query)
     nodes = []
     rels = []
