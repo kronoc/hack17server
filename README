@@ -1,24 +1,83 @@
 You need the neo4j python driver in order for this code to be useful, and for neo4j to be running in an obvious place.
 
+You also need a graphdb installed in a neo4j database, like the one included in the project.
+
 _pip install neo4j-driver_
 
 My machine makes me do "pip2 install neo4j-driver". IMMV.
 
-usage: HTTP GET http://localhost:8080/graph/SOME_ARTICLE_NAME
+usage: 
 
-response: {
-"data": [
+HTTP GET http://localhost:8080/graph/SOME_ARTICLE_NAME
+HTTP GET http://localhost:8080/multigraph/SOME_ARTICLE_NAME,SOME_OTHER_ARTICLE_NAME,YET_ANOTHER_ARTICLE_NAME
+
+
+e.g. GET http://localhost:8080/multigraph/Belfast,Dublin
+
+response:
+
 {
-"url": "https://en.wikipedia.org/wiki/Perl",
-"id": 1,
-"title": "Perl"
+"pages": [
+{
+"url": "https://en.wikipedia.org/wiki/United_Kingdom",
+"rev_link": "true",
+"rel_count": 3808,
+"title": "United Kingdom"
 },
 {
-"url": "https://en.wikipedia.org/wiki/Python",
-"id": 2,
-"name": "Python"
+"url": "https://en.wikipedia.org/wiki/Ireland",
+"rev_link": "true",
+"rel_count": 2218,
+"title": "Ireland"
+},
+{
+"url": "https://en.wikipedia.org/wiki/Republic_of_Ireland",
+"rev_link": "true",
+"rel_count": 407,
+"title": "Republic of Ireland"
+},
+{
+"url": "https://en.wikipedia.org/wiki/Northern_Ireland",
+"rev_link": "true",
+"rel_count": 381,
+"title": "Northern Ireland"
+},
+{
+"url": "https://en.wikipedia.org/wiki/YouTube",
+"rev_link": "true",
+"rel_count": 344,
+"title": "YouTube"
+},
+{
+"url": "https://en.wikipedia.org/wiki/Barcelona",
+"rev_link": "true",
+"rel_count": 323,
+"title": "Barcelona"
+},
+{
+"url": "https://en.wikipedia.org/wiki/May_13",
+"rev_link": "true",
+"rel_count": 188,
+"title": "May 13"
+},
+{
+"url": "https://en.wikipedia.org/wiki/Municipal_corporation",
+"rev_link": "true",
+"rel_count": 187,
+"title": "Municipal corporation"
+},
+{
+"url": "https://en.wikipedia.org/wiki/WWE_Raw",
+"rev_link": "true",
+"rel_count": 184,
+"title": "WWE Raw"
+},
+{
+"url": "https://en.wikipedia.org/wiki/July_10",
+"rev_link": "true",
+"rel_count": 156,
+"title": "July 10"
 }
 ]
 }
-
 
